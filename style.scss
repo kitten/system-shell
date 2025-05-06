@@ -1,0 +1,62 @@
+// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+window {
+  background: transparent;
+  font-family: SF Pro Display;
+  font-feature-settings: "tnum=1";
+  font-weight: 500;
+  font-size: 13px;
+  color: $fg-color;
+}
+
+window.Bar {
+  > centerbox {
+    background: rgba(180, 180, 180, 0.06);
+    min-height: 36px;
+    padding: 2px 18px;
+  }
+
+  .menuitem > * + * {
+    margin-left: 6px;
+  }
+
+  .workspace {
+    min-width: 9px;
+    min-height: 9px;
+    border-radius: 12px;
+    background: $fg-color;
+    border: 0;
+    padding: 0;
+  }
+
+  .workspace.active {
+    min-width: 20px;
+  }
+}
+
+window.OSD {
+  box.OSD {
+    border-radius: 100px;
+    background: rgba(180, 180, 180, 0.06);
+    border: 1px solid rgba(90, 90, 90, 0.1);
+    padding: 13px 16px;
+    margin: 28px;
+  }
+
+  levelbar {
+    trough {
+      margin: 1px .6rem;
+    }
+
+    block {
+      min-height: 3px;
+    }
+  }
+}
+
+label {
+  font-family: SF Mono;
+  font-weight: 600;
+}
