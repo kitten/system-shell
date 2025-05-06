@@ -150,9 +150,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     <window
       visible
       cssClasses={["Bar"]}
-      namespace="hyprpanel"
+      namespace="system-shell"
       gdkmonitor={gdkmonitor}
       exclusivity={Exclusivity.EXCLUSIVE}
+      layer={Astal.Layer.BOTTOM}
       anchor={WindowAnchor.TOP | WindowAnchor.LEFT | WindowAnchor.RIGHT}
       application={App}
     >

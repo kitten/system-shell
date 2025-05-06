@@ -91,7 +91,7 @@ export default function OSD(monitor: Gdk.Monitor) {
         <window
             visible={visible()}
             cssClasses={["OSD"]}
-            namespace="hyprpanel"
+            namespace="system-shell"
             gdkmonitor={monitor}
             application={App}
             layer={Astal.Layer.OVERLAY}
