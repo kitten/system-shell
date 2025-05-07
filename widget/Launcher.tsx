@@ -1,8 +1,20 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk4"
-import { Variable } from "astal"
+import { execAsync, Variable } from "astal"
 import AstalApps from "gi://AstalApps"
 
 const MAX_ITEMS = 8
+
+async function launch(app: AstalApps.Application) {
+  if (app.entry) {
+    try {
+      await execAsync(['uwsm', 'app', app.entry]);
+    } catch {
+      app.launch();
+    }
+  } else {
+    app.launch();
+  }
+}
 
 function AppButton({ app, onSelect }: {
   app: AstalApps.Application;
@@ -51,18 +63,20 @@ export default function Applauncher() {
   };
 
   const onEnter = () => {
-    apps.fuzzy_query(text.get())?.[0].launch();
+    launch(apps.fuzzy_query(text.get())?.[0]);
     onHide();
   };
 
   const onSelect = (app: AstalApps.Application) => {
-    app.launch();
+    launch(app);
     onHide();
   };
 
   return (
     <window
       visible
+      name="launcher"
+      namespace="system-shell"
       cssClasses={['AppLauncher']}
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM}
       exclusivity={Astal.Exclusivity.IGNORE}
