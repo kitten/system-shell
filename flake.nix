@@ -20,6 +20,7 @@
         astal.battery
         astal.notifd
         astal.apps
+        astal.mpris
         brightnessctl
       ];
     in {
@@ -43,6 +44,7 @@
     devShells.default = pkgs.mkShell {
       GSK_RENDERER = "ngl";
       buildInputs = with packages; [
+        system-shell
         astal.notifd
         astal.default
       ];
