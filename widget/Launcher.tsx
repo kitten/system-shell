@@ -7,7 +7,7 @@ const MAX_ITEMS = 8
 async function launch(app: AstalApps.Application) {
   if (app.entry) {
     try {
-      await execAsync(['uwsm', 'app', app.entry]);
+      await execAsync(['uwsm-app', app.entry]);
     } catch {
       app.launch();
     }
