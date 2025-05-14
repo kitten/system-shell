@@ -8,10 +8,21 @@ import AstalNetwork from "gi://AstalNetwork";
 import AstalBattery from "gi://AstalBattery";
 import AstalSound from "gi://AstalWp";
 
-function WorkspaceMenuItem() {
+function WorkspaceMenuItem({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   const hyprland = AstalHyprland.get_default();
-  const workspaces = Variable.derive(
-    [bind(hyprland, 'focusedWorkspace'), bind(hyprland, 'workspaces')],
+  const geometry = gdkmonitor.get_geometry();
+  const xy = `${geometry.x}:${geometry.y}`;
+
+  const workspaces = bind(hyprland, 'workspaces').as((workspaces) => {
+    return workspaces.filter((workspace) => {
+      const monitor = workspace.get_monitor();
+      const workspace_xy = `${monitor.x}:${monitor.y}`;
+      return workspace_xy === xy;
+    });
+  });
+
+  const children = Variable.derive(
+    [bind(hyprland, 'focusedWorkspace'), workspaces],
     (focusedWorkspace, workspaces) => {
       if (workspaces.length <= 1)
         return <box visible={false} />;
@@ -35,7 +46,7 @@ function WorkspaceMenuItem() {
   );
   return (
     <box cssClasses={["menuitem"]}>
-      {workspaces()}
+      {children()}
     </box>
   );
 }
@@ -159,7 +170,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     >
       <centerbox cssName="centerbox" heightRequest={40}>
         <box spacing={19}>
-          <WorkspaceMenuItem />
+          <WorkspaceMenuItem gdkmonitor={gdkmonitor} />
         </box>
         <box />
         <box spacing={19}>
