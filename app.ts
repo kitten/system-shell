@@ -19,7 +19,7 @@ function main(request: string | undefined): boolean {
       Players.get_default().play_next();
       return true;
     case 'play_previous':
-      Players.get_default().play_next();
+      Players.get_default().play_previous();
       return true;
     default:
       return false;
