@@ -159,12 +159,12 @@ function TimeMenuItem() {
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   return (
     <window
+      layer={Astal.Layer.TOP}
       visible
       cssClasses={["Bar"]}
-      namespace="system-shell"
+      namespace="system-bar"
       gdkmonitor={gdkmonitor}
       exclusivity={Exclusivity.EXCLUSIVE}
-      layer={Astal.Layer.BOTTOM}
       anchor={WindowAnchor.TOP | WindowAnchor.LEFT | WindowAnchor.RIGHT}
       application={App}
     >

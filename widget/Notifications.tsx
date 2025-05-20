@@ -1,6 +1,8 @@
 import { App, Astal, Gtk, Gdk } from "astal/gtk4"
-import { GLib, Time, bind, timeout } from "astal"
-import AstalNotifd from "gi://AstalNotifd"
+import { GLib, Gio, Time, bind, timeout } from "astal"
+import AstalNotifd from "gi://AstalNotifd";
+import Pango from "gi://Pango?version=1.0";
+import AstalApps from "gi://AstalApps";
 
 const TIMEOUT_DELAY = 4200;
 
@@ -24,10 +26,13 @@ const urgency = (notification: AstalNotifd.Notification) => {
     }
 }
 
+const getIconFromDesktopEntry = (desktopEntry: string): string | undefined =>
+  new AstalApps.Apps().exact_query(desktopEntry)[0]?.iconName;
+
 function Notification({ notification }: { notification: AstalNotifd.Notification; }) {
   const { START, CENTER, END } = Gtk.Align;
   const actions = notification.get_actions();
-  const appIcon = notification.appIcon || notification.desktopEntry;
+  const appIcon = notification.appIcon || getIconFromDesktopEntry(notification.desktopEntry);
   const imageExists = !!notification.image && fileExists(notification.image);
   const imageFile = notification.image && imageExists ? notification.image : undefined;
   const imageIcon = notification.image && !imageExists ? notification.image : undefined;
@@ -58,12 +63,15 @@ function Notification({ notification }: { notification: AstalNotifd.Notification
       onHoverLeave={scheduleDismiss}
       onDestroy={cancelDismiss}
       onClicked={dismiss}
+      widthRequest={400}
       setup={scheduleDismiss}
     >
       <image
         cssClasses={['app-icon']}
         visible={!!appIcon}
         iconName={appIcon}
+        widthRequest={24}
+        heightRequest={24}
       />
       <box cssClasses={['content']} vertical>
         <box cssClasses={['header']}>
@@ -80,7 +88,7 @@ function Notification({ notification }: { notification: AstalNotifd.Notification
           />
         </box>
         <label
-          cssClasses={notification.body ? ['summary bold'] : ['summary']}
+          cssClasses={notification.body ? ['summary', 'bold'] : ['summary']}
           halign={START}
           xalign={0}
           label={notification.summary}
@@ -94,7 +102,11 @@ function Notification({ notification }: { notification: AstalNotifd.Notification
             halign={START}
             xalign={0}
             justify={Gtk.Justification.FILL}
+            ellipsize={Pango.EllipsizeMode.END}
             label={notification.body}
+            lines={2}
+            maxWidthChars={1}
+            hexpand
           />
         )}
         {notification.image && (
@@ -148,12 +160,12 @@ export default function NotificationPopups(gdkmonitor: Gdk.Monitor) {
 
   return (
     <window
+      layer={Astal.Layer.TOP}
       visible={notifications.as((list) => list.length > 0)}
       cssClasses={['NotificationPopups']}
       namespace="system-shell"
       gdkmonitor={gdkmonitor}
       application={App}
-      layer={Astal.Layer.TOP}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
     >

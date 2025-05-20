@@ -74,6 +74,7 @@ export default function Applauncher() {
 
   return (
     <window
+      layer={Astal.Layer.TOP}
       visible
       name="launcher"
       namespace="system-shell"

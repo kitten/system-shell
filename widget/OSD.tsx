@@ -89,14 +89,14 @@ export default function OSD(monitor: Gdk.Monitor) {
 
     return (
         <window
-            visible={visible()}
-            cssClasses={["OSD"]}
-            namespace="system-shell"
-            gdkmonitor={monitor}
-            application={App}
-            layer={Astal.Layer.OVERLAY}
-            keymode={Astal.Keymode.NONE}
-            anchor={Astal.WindowAnchor.BOTTOM}
+          layer={Astal.Layer.OVERLAY}
+          visible={visible()}
+          cssClasses={["OSD"]}
+          namespace="system-shell"
+          gdkmonitor={monitor}
+          application={App}
+          keymode={Astal.Keymode.NONE}
+          anchor={Astal.WindowAnchor.BOTTOM}
         >
           <OnScreenProgress visible={visible} />
         </window>
