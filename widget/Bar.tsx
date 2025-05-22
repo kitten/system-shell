@@ -1,5 +1,5 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk4"
-import { bind, interval, timeout, Variable } from "astal"
+import { bind, interval, timeout, Variable, AstalIO } from "astal"
 
 const { WindowAnchor, Exclusivity } = Astal;
 
@@ -130,6 +130,7 @@ function BatteryMenuItem() {
 
 function TimeMenuItem() {
   const INTERVAL = 60_000;
+  const TOLERANCE = 5_000;
   const time = Variable(new Date());
 
   const getTimeLabel = (date: Date) => {
@@ -138,12 +139,21 @@ function TimeMenuItem() {
     return `${hh}:${mm.padStart(2, '0')}`;
   };
 
-  let timer = timeout(INTERVAL - (time.get().valueOf() % INTERVAL), () => {
-    time.set(new Date());
-    timer = interval(INTERVAL, () => {
+  const scheduleTimeUpdate = () => {
+    if (timer) timer.cancel();
+    timer = timeout(INTERVAL - (time.get().valueOf() % INTERVAL), () => {
       time.set(new Date());
+      timer = interval(INTERVAL, () => {
+        time.set(new Date());
+        if (time.get().valueOf() % INTERVAL >= TOLERANCE) {
+          scheduleTimeUpdate();
+        }
+      });
     });
-  });
+  };
+
+  let timer: AstalIO.Time;
+  scheduleTimeUpdate();
 
   const onDestroy = () => {
     timer.cancel();
